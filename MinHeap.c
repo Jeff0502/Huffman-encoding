@@ -27,22 +27,22 @@ void heapify(int array[], int size, int i)
         }
 }
 
-void insert(int array[], int newNum)
+void insert(int heap[], int newNum)
 {
         if (heap_size == 0){
-                array[0] = newNum;
+                heap[0] = newNum;
 
                 heap_size += 1;
         }
 
         else{
                 //sets last node (empty node) to the new num
-                array[heap_size] = newNum;
+                heap[heap_size] = newNum;
 
                 heap_size += 1;
 
                 for (int i = heap_size / 2 - 1; i >= 0; i--){
-                        heapify(array, heap_size, i);
+                        heapify(heap, heap_size, i);
                 }
         }
 }
@@ -51,17 +51,14 @@ void delete_node(int heap[], int num, int *size)
 {
     int i;
 
-    for(i = 0; i < *size; i++)
-    {
-        if(num == heap[i])
-            break;
+    for(i = 0; i < *size; i++){
+        if(num == heap[i]) break;
     }
 
     swap_nodes(&heap[i], &heap[*size - 1]);
     --*size;
 
-    for (int i = *size / 2 - 1; i >= 0; i--)
-    {
+    for (int i = *size / 2 - 1; i >= 0; i--){
         heapify(heap, *size, i);
     }
 }

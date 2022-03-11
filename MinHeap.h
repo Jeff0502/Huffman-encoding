@@ -2,7 +2,16 @@
 
 #define MINHEAP_H
 
+#define ARRAY_SIZE(x) (sizeof(x)/sizeof(x[0]))
+
 #include <stdio.h>
+
+struct node{
+
+        int freq;
+
+        char c;
+};
 
 void swap_nodes(int *a, int *b);
 
