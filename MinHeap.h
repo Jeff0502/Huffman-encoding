@@ -17,10 +17,12 @@ void swap_nodes(int *a, int *b);
 
 void heapify(int array[], int size, int i);
 
-void insert(int array[], int newNum);
+void insert(int array[], int newNum, int *size);
 
 void print_heap(int array[], int size);
 
 void delete_node(int heap[], int num, int *size);
+
+int pop(int heap[], int *size);
 
 #endif
