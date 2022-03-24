@@ -1,5 +1,7 @@
 CC := gcc
 
+CFLAGS := -g
+
 SRC := ./*.c
 
 BIN := ./minHeap.o
@@ -7,7 +9,7 @@ BIN := ./minHeap.o
 .PHONY: all clean
 
 all: $(SRC)
-	$(CC) $^ -o $(BIN)
+	$(CC) $^ $(CFLAGS) -o $(BIN)
 
 run: $(BIN)
 	./$^

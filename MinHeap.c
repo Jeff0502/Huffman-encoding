@@ -1,95 +1,117 @@
 #include "MinHeap.h"
 
-void swap_nodes(int *a, int *b)
-{
-    int i = *a;
+void build_heap(struct minHeap *mh);
 
-    *a = *b;
-    *b = i;
+void build_heap(struct minHeap *mh)
+{
+        int n = mh->size - 1, j;
+
+        for (j = (n - 1) / 2; j >= 0; --j)
+                heapify(mh, j);
 }
 
-void heapify(int array[], int size, int i)
+struct node *create_node(char c, int freq)
+{       
+        struct node *i = malloc(sizeof(struct node));
+
+        i->c = c;
+        i->freq = freq;
+        i->left = NULL;
+        i->right = NULL;
+
+        return i;
+}
+
+void destroy_mh(struct minHeap *mh)
+{
+        free(mh->array);
+        free(mh);
+}
+
+struct minHeap *create_dheap(char *data, int freq[], int size)
+{
+        struct minHeap *i = create_heap(size);
+
+        for(int j = 0; j < size; ++j){
+                i->array[j] = create_node(data[j], freq[j]);
+        }
+
+        i->size = size;
+
+        build_heap(i);
+
+        return i;
+}
+
+struct minHeap *create_heap(unsigned capacity)
+{
+        struct minHeap *i = (struct minHeap *)malloc(sizeof(struct minHeap));
+
+        i->size = 0;
+
+        i->capacity = capacity;
+
+        i->array = (struct node**)malloc(sizeof(struct node *) * i->capacity);
+
+        return i;        
+}
+
+void swap_nodes(struct node **a, struct node **b)
+{
+        struct node *i = *a;
+
+        *a = *b;
+        *b = i;
+}
+
+void heapify(struct minHeap *heap, int i)
 {
         int min = i, l = 2 * i + 1, r = 2 * i + 2;
 
-        if(l < size && array[l] < array[min])
+        if(l < heap->size && heap->array[l] < heap->array[min])
                 min = l;
 
-        if(r < size && array[r] < array[min])
+        if(r < heap->size && heap->array[r] < heap->array[min])
                 min = r;
 
         if(min != i){
-                swap_nodes(&array[min], &array[i]);
+                swap_nodes(&heap->array[min], &heap->array[i]);
 
-                heapify(array, size, min);
+                heapify(heap, min);
         }
 }
 
-void insert(int heap[], int newNum, int *size)
+void MH_push(struct minHeap *heap, struct node *node)
 {
-        if (*size == 0){
-                heap[0] = newNum;
+        ++heap->size;
 
-                ++*size;
+        int i = heap->size - 1;
+  
+        while (i && node->freq < heap->array[(i - 1) / 2]->freq) {
+                heap->array[i] = heap->array[(i - 1) / 2];
+                i = (i - 1) / 2;
         }
-
-        else{
-                //sets last node (empty node) to the new num
-                heap[*size] = newNum;
-
-                ++*size;
-
-                for (int i = *size / 2 - 1; i >= 0; i--){
-                        heapify(heap, *size, i);
-                }
-        }
+  
+        heap->array[i] = node;
 }
 
-int pop(int heap[], int *size)
+struct node *MH_pop(struct minHeap *heap)
 {
-        int min = heap[0];
+        struct node *min = heap->array[0];
 
-        swap_nodes(&heap[0], &heap[*size - 1]);
+        swap_nodes(&heap->array[0], &heap->array[heap->size - 1]);
 
-        --*size;
+        --heap->size;
 
-        for (int i = *size / 2 - 1; i >= 0; i--){
-                heapify(heap, *size, i);
-        }
+        heapify(heap, 0);
 
         return min;
 }
 
-void build_tree(int heap[], int *size)
+void print_heap(struct minHeap *heap)
 {
-        // int internal_node = 0;
+        for (int i = 0; i < heap->size; i++)
+                printf("%d ", heap->array[i]->freq);
 
-        // for(int i = 0; i < 2; i++)
-        //         internal_node += pop();
-
-        // insert(heap, internal_node, size);
-}
-
-void delete_node(int heap[], int num, int *size)
-{
-    int i;
-
-    for(i = 0; i < *size; i++){
-        if(num == heap[i]) break;
-    }
-
-    swap_nodes(&heap[i], &heap[*size - 1]);
-    --*size;
-
-    for (int i = *size / 2 - 1; i >= 0; i--){
-        heapify(heap, *size, i);
-    }
-}
-
-void print_heap(int array[], int size)
-{
-  for (int i = 0; i < size; ++i)
-    printf("%d ", array[i]);
-
-  printf("\n");
+        printf("\n");
 }

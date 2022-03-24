@@ -2,27 +2,43 @@
 
 #define MINHEAP_H
 
-#define ARRAY_SIZE(x) (sizeof(x)/sizeof(x[0]))
-
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 struct node{
 
         int freq;
 
         char c;
+
+	struct node *left, *right;
 };
 
-void swap_nodes(int *a, int *b);
+struct minHeap{
+        unsigned size;
 
-void heapify(int array[], int size, int i);
+        unsigned capacity;
 
-void insert(int array[], int newNum, int *size);
+        struct  node** array;
+};
 
-void print_heap(int array[], int size);
+struct minHeap *create_dheap(char *data, int freq[], int size);
 
-void delete_node(int heap[], int num, int *size);
+struct node *create_node(char c, int freq);
 
-int pop(int heap[], int *size);
+void swap_nodes(struct node **a, struct node **b);
+
+struct minHeap *create_heap(unsigned capacity);
+
+void destroy_mh(struct minHeap *mh);
+
+void heapify(struct minHeap *heap, int i);
+
+void MH_push(struct minHeap *heap, struct node *node);
+
+void print_heap(struct minHeap *heap);
+
+struct node *MH_pop(struct minHeap *heap);
 
 #endif

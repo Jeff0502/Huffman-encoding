@@ -4,7 +4,8 @@
 
 #include "MinHeap.h"
 #include "stdlib.h"
+#include <string.h>
 
-void encode(char *string);
+void encode(char input[], int size);
 
 #endif

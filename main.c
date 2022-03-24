@@ -2,15 +2,11 @@
 
 int main(int argc, char const *argv[])
 {
-        int array[5], size = 0;
+        char in[] = "aaaaabbbbbbbbbccccccccccccdddddddddddddeeeeeeeeeeeeeeeefffffffffffffffffffffffffffffffffffffffffffff";
 
-        insert(array, 3, &size);
-        insert(array, 4, &size);
-        insert(array, 9, &size);
-        insert(array, 5, &size);
-        insert(array, 2, &size);
+        int sz = sizeof(in)/sizeof(in[0]);
 
-        print_heap(array, size);
+        encode(in, sz);
 
-    return 0;
+        return 0;
 }
