@@ -68,10 +68,10 @@ void heapify(struct minHeap *heap, int i)
 {
         int min = i, l = 2 * i + 1, r = 2 * i + 2;
 
-        if(l < heap->size && heap->array[l] < heap->array[min])
+        if(l < heap->size && heap->array[l]->freq < heap->array[min]->freq)
                 min = l;
 
-        if(r < heap->size && heap->array[r] < heap->array[min])
+        if(r < heap->size && heap->array[r]->freq < heap->array[min]->freq)
                 min = r;
 
         if(min != i){
