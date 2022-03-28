@@ -2,9 +2,9 @@
 
 int main(int argc, char const *argv[])
 {
-        char in[] = "aaaaabbbbbbbbbccccccccccccdddddddddddddeeeeeeeeeeeeeeeefffffffffffffffffffffffffffffffffffffffffffff";
+        char in[] = "EKHETDIT";
 
-        int sz = sizeof(in)/sizeof(in[0]);
+        int sz = sizeof(in) / sizeof(in[0]);
 
         encode(in, sz);
 

@@ -2,6 +2,11 @@
 
 void build_heap(struct minHeap *mh);
 
+int is_leaf(struct node *n)
+{
+        return (n->left == NULL && n->right == NULL);
+}
+
 void build_heap(struct minHeap *mh)
 {
         int n = mh->size - 1, j;

@@ -23,6 +23,8 @@ struct minHeap{
         struct  node** array;
 };
 
+int is_leaf(struct node *n);
+
 struct minHeap *create_dheap(char *data, int freq[], int size);
 
 struct node *create_node(char c, int freq);

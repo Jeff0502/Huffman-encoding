@@ -1,37 +1,71 @@
 #include "Encoder.h"
 
+char *code[256] = {0};
+
+void free_codes(char *input, int size);
+
 int *get_freq(char *in, char *distinct);
 
-void print_codes(struct node *root, int out[], int top);
+void print_codes(struct node *root, char out[], int top);
 
 struct node *build_tree(char count_c[], int freq[], int size);
 
 char *get_c(char *in, int size);
 
+void free_tree(struct node *root);
+
+void free_tree(struct node *root)
+{
+       if(!is_leaf(root)){
+               free_tree(root->left);
+               free_tree(root->right);
+        }
+
+       else{
+               free(root);
+        }
+}
+
 void encode(char input[], int size)
 {
-        int *freq, out[50], top = 0;
+        int distinct_size = 0;
+
+        int *freq, top = 0;
+
+        char out[50];
 
         char *char_in;
 
         char_in = get_c(input, size);
 
-        size = strlen(char_in);
+        distinct_size = strlen(char_in);
 
         freq = get_freq(input, char_in);
 
-        struct node *root = build_tree(char_in, freq, size);
+        struct node *root = build_tree(char_in, freq, distinct_size);
 
         print_codes(root, out, top);
 
+        printf("\n");
+
+        //To exclude the null character
+        size--;
+
+        for(int i = 0; i < size - 1; i++){
+                printf("%s", code[(int)input[i]]);
+        }
+
+        printf("\n");
+
+        free_codes(char_in, distinct_size);
         free(char_in);
         free(freq);
-        
+        free_tree(root);
 }
 
 struct node *build_tree(char char_in[], int freq[], int size)
 {
-        struct node *left, *right, *top;
+        struct node *left, *right, *top, *root;
 
         struct minHeap *minH = create_dheap(char_in, freq, size);
 
@@ -50,26 +84,47 @@ struct node *build_tree(char char_in[], int freq[], int size)
         }
 
         //return the last node
-        return MH_pop(minH);
+        root = MH_pop(minH);
+
+        destroy_mh(minH);
+
+        return root;
 }
 
-void print_codes(struct node *root, int out[], int top)
+void free_codes(char *distinct, int size)
+{
+        for(int i = 0; i < size; i++){
+              free(code[(int)distinct[i]]);
+        }
+}
+
+void print_codes(struct node *root, char out[], int top)
 {
         if(root->left){
-                out[top] = 0;
+                out[top] = '0';
                 print_codes(root->left, out, top + 1);
+
         }
 
         if(root->right){
-                out[top] = 1;
+                out[top] = '1';
                 print_codes(root->right, out, top + 1);
         }
 
         if(!(root->right) && !(root->left)){
                 printf("%c: ", root->c);
 
-                for(int i = 0; i < top; ++i)
-                        printf("%d", out[i]);
+                int len = strlen(out);
+
+                code[root->c] = malloc(len * sizeof(char));
+
+                if(code[root->c] == NULL){
+                        fprintf(stderr, "Not enough memory\n");
+                }
+
+                strcpy(code[root->c], out);
+
+                printf("%s", out);
 
                 printf("\n");
         }
