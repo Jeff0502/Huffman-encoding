@@ -32,15 +32,15 @@ void free_tree(struct node *root)
         }
 }
 
-void print(struct node *root)
+void print_codes(struct node *root)
 {
         if(root->left){
-                print(root->left);
+                print_codes(root->left);
 
         }
 
         if(root->right){
-                print(root->right);
+                print_codes(root->right);
         }
 
         if(is_leaf(root)){
@@ -70,7 +70,7 @@ void encode(char input[], int size)
 
         assign_codes(root, out, 0);
 
-        print(root);
+        print_codes(root);
 
         c_len = get_code_len(distinct, distinct_size);
 
