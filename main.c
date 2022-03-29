@@ -2,7 +2,7 @@
 
 int main(int argc, char const *argv[])
 {
-        char in[] = "EKHETDIT";
+        char in[] = "Hello World";
 
         int sz = sizeof(in) / sizeof(in[0]);
 

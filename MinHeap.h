@@ -8,7 +8,7 @@
 
 struct node{
 
-        int freq;
+        int data;
 
         char c;
 
@@ -20,7 +20,7 @@ struct minHeap{
 
         unsigned capacity;
 
-        struct  node** array;
+        struct  node **array;
 };
 
 int is_leaf(struct node *n);

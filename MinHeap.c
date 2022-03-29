@@ -15,12 +15,12 @@ void build_heap(struct minHeap *mh)
                 heapify(mh, j);
 }
 
-struct node *create_node(char c, int freq)
+struct node *create_node(char c, int data)
 {       
         struct node *i = malloc(sizeof(struct node));
 
         i->c = c;
-        i->freq = freq;
+        i->data = data;
         i->left = NULL;
         i->right = NULL;
 
@@ -73,10 +73,10 @@ void heapify(struct minHeap *heap, int i)
 {
         int min = i, l = 2 * i + 1, r = 2 * i + 2;
 
-        if(l < heap->size && heap->array[l]->freq < heap->array[min]->freq)
+        if(l < heap->size && heap->array[l]->data < heap->array[min]->data)
                 min = l;
 
-        if(r < heap->size && heap->array[r]->freq < heap->array[min]->freq)
+        if(r < heap->size && heap->array[r]->data < heap->array[min]->data)
                 min = r;
 
         if(min != i){
@@ -92,7 +92,7 @@ void MH_push(struct minHeap *heap, struct node *node)
 
         int i = heap->size - 1;
   
-        while (i && node->freq < heap->array[(i - 1) / 2]->freq) {
+        while (i && node->data < heap->array[(i - 1) / 2]->data) {
                 heap->array[i] = heap->array[(i - 1) / 2];
                 i = (i - 1) / 2;
         }
@@ -116,7 +116,7 @@ struct node *MH_pop(struct minHeap *heap)
 void print_heap(struct minHeap *heap)
 {
         for (int i = 0; i < heap->size; i++)
-                printf("%d ", heap->array[i]->freq);
+                printf("%d ", heap->array[i]->data);
 
         printf("\n");
 }

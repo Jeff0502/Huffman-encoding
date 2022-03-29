@@ -2,15 +2,21 @@
 
 char *code[256] = {0};
 
+void print_huffcode(int size, char *input);
+
+void print_hufftable(struct minHeap *c_len);
+
 void free_codes(char *input, int size);
 
 int *get_freq(char *in, char *distinct);
 
-void print_codes(struct node *root, char out[], int top);
+void assign_codes(struct node *root, char out[], int top);
+
+struct minHeap *get_code_len(char *distinct, int size);
 
 struct node *build_tree(char count_c[], int freq[], int size);
 
-char *get_c(char *in, int size);
+char *get_distinct(char *in, int size);
 
 void free_tree(struct node *root);
 
@@ -26,28 +32,65 @@ void free_tree(struct node *root)
         }
 }
 
+void print(struct node *root)
+{
+        if(root->left){
+                print(root->left);
+
+        }
+
+        if(root->right){
+                print(root->right);
+        }
+
+        if(is_leaf(root)){
+                printf("%c: ", root->c);
+
+                printf("%s", code[(int)root->c]);
+
+                printf("\n");
+        }
+}
+
 void encode(char input[], int size)
 {
-        int distinct_size = 0;
+        int distinct_size = 0, *freq, top = 0;
 
-        int *freq, top = 0;
+        char out[50], *distinct;
 
-        char out[50];
+        distinct = get_distinct(input, size);
 
-        char *char_in;
+        distinct_size = strlen(distinct);
 
-        char_in = get_c(input, size);
+        struct minHeap *c_len;
 
-        distinct_size = strlen(char_in);
+        freq = get_freq(input, distinct);
 
-        freq = get_freq(input, char_in);
+        struct node *root = build_tree(distinct, freq, distinct_size);
 
-        struct node *root = build_tree(char_in, freq, distinct_size);
+        assign_codes(root, out, 0);
 
-        print_codes(root, out, top);
+        print(root);
 
-        printf("\n");
+        c_len = get_code_len(distinct, distinct_size);
 
+        destroy_mh(c_len);
+        free_codes(distinct, distinct_size);
+        free(distinct);
+        free(freq);
+        free_tree(root);
+}
+
+void print_hufftable(struct minHeap *c_len)
+{
+        struct node *j = MH_pop(c_len);
+
+        printf("\t%c:%s\n", j->c, code[(int)j->c]);
+
+}
+
+void print_huffcode(int size, char *input)
+{
         //To exclude the null character
         size--;
 
@@ -57,10 +100,6 @@ void encode(char input[], int size)
 
         printf("\n");
 
-        free_codes(char_in, distinct_size);
-        free(char_in);
-        free(freq);
-        free_tree(root);
 }
 
 struct node *build_tree(char char_in[], int freq[], int size)
@@ -74,7 +113,7 @@ struct node *build_tree(char char_in[], int freq[], int size)
                 left = MH_pop(minH);
                 right = MH_pop(minH);
 
-                top = create_node('$', left->freq + right->freq);
+                top = create_node('$', left->data + right->data);
 
                 top->left = left;
 
@@ -98,22 +137,20 @@ void free_codes(char *distinct, int size)
         }
 }
 
-void print_codes(struct node *root, char out[], int top)
+void assign_codes(struct node *root, char out[], int top)
 {
         if(root->left){
                 out[top] = '0';
-                print_codes(root->left, out, top + 1);
+                assign_codes(root->left, out, top + 1);
 
         }
 
         if(root->right){
                 out[top] = '1';
-                print_codes(root->right, out, top + 1);
+                assign_codes(root->right, out, top + 1);
         }
 
-        if(!(root->right) && !(root->left)){
-                printf("%c: ", root->c);
-
+        if(is_leaf(root)){
                 int len = strlen(out);
 
                 code[root->c] = malloc(len * sizeof(char));
@@ -123,14 +160,10 @@ void print_codes(struct node *root, char out[], int top)
                 }
 
                 strcpy(code[root->c], out);
-
-                printf("%s", out);
-
-                printf("\n");
         }
 }
 
-char *get_c(char *in, int size)
+char *get_distinct(char *in, int size)
 {
         int count = 0, top = 0, i;
 
@@ -178,4 +211,28 @@ int *get_freq(char *in, char *distinct)
         }
 
         return out;
+}
+
+struct minHeap *get_code_len(char *distinct, int size)
+{
+        struct minHeap *code_len;
+
+        struct node *n;
+
+        char c;
+
+        int len = 0;
+
+        code_len = create_heap(size);
+
+        for(int i = 0; distinct[i] != '\0'; i++){
+                c = distinct[i];
+                len = strlen(code[(int)c]);
+
+                n = create_node(c, len);
+
+                MH_push(code_len, n);
+        }
+
+        return code_len;
 }
