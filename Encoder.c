@@ -6,6 +6,8 @@ void print_huffcode(int size, char *input);
 
 void print_hufftable(struct minHeap *c_len);
 
+void print_codes(struct node *root);
+
 void free_codes(char *input, int size);
 
 int *get_freq(char *in, char *distinct);
